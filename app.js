@@ -48,8 +48,8 @@ app.use(function (req, res, next) {
 });
 
 //Handle HTTP routes
-app.use("/v1/user", userRoutes);
-app.use("/v1/posts", postRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/posts", postRoutes);
 
 //Catch 404 errors and foward them to the error handler
 app.use(function (req, res, next) {
