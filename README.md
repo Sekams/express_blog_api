@@ -1,6 +1,6 @@
 # The Nexus Blog API
 
-**The Nexus Blog API** is a RESTful API for serving data persistence methods to the Shopping List application.
+**The Nexus Blog API** is a RESTful API for serving data persistence methods to The Nexus Blog application.
 
 ## Live API
 WIP
@@ -32,7 +32,7 @@ node app.js
 ```
 source .env
 ```
-7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: `http://localhost:<PORT>` in any web browser of choice
+7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: `http://localhost:<PORT>` (replace <PORT> with port number) in any client of choice
 
 ## Features
 * User Account management (Signup and Signin)
