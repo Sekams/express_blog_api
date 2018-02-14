@@ -128,11 +128,17 @@ router.get("/:pId/comments/:cId", function (req, res) {
 
 //PUT /posts/:pId/comments/:cId
 //Route for a specific comment updating
-router.put("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res) {
-    req.comment.update(req.body, function (err, result) {
-        if (err) return next(err);
-        res.json(result);
-    });
+router.put("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res, next) {
+    if (GeneralHelper.validateParams(req, ["body"])) {
+        req.comment.update(req.body, function (err, result) {
+            if (err) return next(err);
+            res.json(result);
+        });
+    } else {
+        var err = new Error("Parameter 'body' missing");
+        err.status = 422;
+        return next(err);
+    }
 });
 
 //DELETE /posts/:pId/comments/:cId
