@@ -10,7 +10,7 @@ const AuthTokenHelper = require("../helper/auth_token_helper");
 //Route for creating users
 router.post("/signup", function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["firstName", "lastName", "username", "password", "email"])) {
-        User.find({ $or: [{ username: req.body.username }, { email: req.body.email }] }, function (err, doc) {
+        User.find({ $or: [{ username: req.body.username.toLowerCase() }, { email: req.body.email.toLowerCase() }] }, function (err, doc) {
             if (err) return next(err);
             if (doc.length > 0) {
                 err = new Error("User already exists");
@@ -18,6 +18,8 @@ router.post("/signup", function (req, res, next) {
                 return next(err);
             } else {
                 var user = new User(req.body);
+                user.username = req.body.username.toLowerCase();
+                user.email = req.body.email.toLowerCase();
                 user.save(function (err, user) {
                     if (err) return next(err);
                     res.status(201);
@@ -38,7 +40,7 @@ router.post("/signup", function (req, res, next) {
 //Route for users to login
 router.post("/signin", function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["username", "password"])) {
-        User.findOne({ username: req.body.username }, function (err, user) {
+        User.findOne({ username: req.body.username.toLowerCase() }, function (err, user) {
             if (err) return next(err);
             if (user) {
                 user.comparePassword(req.body.password, function (err, isMatching) {
