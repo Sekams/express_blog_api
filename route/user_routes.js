@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router();
 var User = require("../model/user");
 const GeneralHelper = require("../helper/general_helper");
+const AuthTokenHelper = require("../helper/auth_token_helper");
 
 //POST /user/signup
 //Route for creating users
@@ -21,7 +22,7 @@ router.post("/signup", function (req, res, next) {
                     if (err) return next(err);
                     res.status(201);
                     res.json({
-                        token: "wrgnekrgnkrgnkjwrngjkwnjogwreignitgiwn"
+                        token: AuthTokenHelper.generateToken(user.id)
                     });
                 });
             }
@@ -45,7 +46,7 @@ router.post("/signin", function (req, res, next) {
                     if (isMatching) {
                         res.status = 200;
                         res.json({
-                            token: "wrgnekrgnkrgnkjwrngjkwnjogwreignitgiwn"
+                            token: AuthTokenHelper.generateToken(user.id)
                         });
                     } else {
                         err = new Error("Invalid username or password");

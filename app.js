@@ -33,7 +33,7 @@ db.once("open", function () {
     console.log("db connection successful");
 });
 
-//Handling Cross Origin Request permissions
+//Handle Cross Origin Request permissions
 app.use(function (req, res, next) {
     //Allow requests from all origins
     res.header("Access-Control-Allow-Origin", "*");
