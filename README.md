@@ -32,7 +32,7 @@ node app.js
 ```
 source .env
 ```
-7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: http://localhost:<PORT> in any web browser of choice
+7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: `http://localhost:<PORT>` in any web browser of choice
 
 ## Features
 * User Account management (Signup and Signin)
@@ -47,14 +47,14 @@ source .env
 | POST | /api/v1/user/signin | NO | Logs regitered users in and requires **username** and **password** as string arguments |
 | POST | /api/v1/posts | YES | Creates a new blog post for the logged in user and requires **title** and **body** as string arguments |
 | GET | /api/v1/posts | NO | Retrieves all available posts from the database |
-| GET | /api/v1/posts/:pID | NO | Retrives a particular blog post with the id **pID** |
-| PUT | /api/v1/posts/:pID | YES | Updates a particular blog post with the id **pID** and takes either **title**, **body** or both as string arguments |
-| DELETE | /api/v1/posts/:pID | YES | Deletes a particular blog post with the id **pID** |
-| POST | /api/v1/posts/:pID/comments | YES | Creates a new comment for a particular blog post with the id **pID** and requires **body** as a string argument |
-| GET | /api/v1/posts/:pID/comments | NO | Retrives all comments for a particular blog post with the id **pID** |
-| GET | /api/v1/posts/:pID/comments/:cID | NO | Retrives a particular comment with the id **cID** for a particular blog post with the id **pID** |
-| PUT | /api/v1/posts/:pID/comments/:cID | YES | Updates a particular comment with the id **cID** for a particular blog post with the id **pID** and requires **body** as a string argument |
-| DELETE | /api/v1/posts/:pID/comments/:cID | YES | Deletes a particular comment with the id **cID** for a particular blog post with the id **pID** |
+| GET | /api/v1/posts/\<pID\> | NO | Retrives a particular blog post with the id **pID** |
+| PUT | /api/v1/posts/\<pID\> | YES | Updates a particular blog post with the id **pID** and takes either **title**, **body** or both as string arguments |
+| DELETE | /api/v1/posts/\<pID\> | YES | Deletes a particular blog post with the id **pID** |
+| POST | /api/v1/posts/\<pID\>/comments | YES | Creates a new comment for a particular blog post with the id **pID** and requires **body** as a string argument |
+| GET | /api/v1/posts/\<pID\>/comments | NO | Retrives all comments for a particular blog post with the id **pID** |
+| GET | /api/v1/posts/\<pID\>/comments/\<cID\> | NO | Retrives a particular comment with the id **cID** for a particular blog post with the id **pID** |
+| PUT | /api/v1/posts/\<pID\>/comments/\<cID\> | YES | Updates a particular comment with the id **cID** for a particular blog post with the id **pID** and requires **body** as a string argument |
+| DELETE | /api/v1/posts/\<pID\>/comments/\<cID\> | YES | Deletes a particular comment with the id **cID** for a particular blog post with the id **pID** |
 
 
 ## Testing
