@@ -6,31 +6,34 @@ var User = require("../model/user");
 var Post = require("../model/post");
 var Comment = require("../model/comment");
 const GeneralHelper = require("../helper/general_helper");
+const AuthTokenHelper = require("../helper/auth_token_helper");
 
 //Handle all requests with the pId parameter
 router.param("pId", function (req, res, next, id) {
-    Post.findById(id, function (err, doc) {
+    Post.findById(id, function (err, post) {
         if (err) return next(err);
-        if (!doc) {
+        if (!post) {
             err = new Error("Not Found");
             err.status = 404;
             return next(err);
         }
-        req.post = doc;
+        req.post = post;
+        req.body.postId = post.id;
         return next();
     });
 });
 
 //Handle all requests with the cId parameter
 router.param("cId", function (req, res, next, id) {
-    Comment.findById(id, function (err, doc) {
+    Comment.findById(id, function (err, comment) {
         if (err) return next(err);
-        if (!doc) {
+        if (!comment) {
             err = new Error("Not Found");
             err.status = 404;
             return next(err);
         }
-        req.comment = doc;
+        req.comment = comment;
+        req.commentId = comment.id;
         return next();
     });
 });
@@ -48,7 +51,7 @@ router.get("/", function (req, res, next) {
 
 //POST /posts
 //Route for creating posts
-router.post("/", function (req, res) {
+router.post("/", AuthTokenHelper.verifyToken, function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["userId", "title", "body"])) {
         var post = new Post(req.body);
         post.save(function (err, post) {
@@ -71,7 +74,7 @@ router.get("/:pId", function (req, res) {
 
 //PUT /posts/:pId
 //Route for specific post updating
-router.put("/:pId", function (req, res) {
+router.put("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
     req.post.update(req.body, function (err, result) {
         if (err) return next(err);
         res.json(result);
@@ -80,7 +83,7 @@ router.put("/:pId", function (req, res) {
 
 //DELETE /posts/:pId
 //Route for specific post deleting
-router.delete("/:pId", function (req, res) {
+router.delete("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
     req.post.remove(function (err) {
         if (err) return next(err);
         res.json({
@@ -102,7 +105,7 @@ router.get("/:pId/comments", function (req, res) {
 
 //POST /posts/:pId/comments
 //Route for creating a comment
-router.post("/:pId/comments", function (req, res, next) {
+router.post("/:pId/comments", AuthTokenHelper.verifyToken, function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["userId", "postId", "body"])) {
         var comment = new Comment(req.body);
         comment.save(function (err, comment) {
@@ -125,7 +128,7 @@ router.get("/:pId/comments/:cId", function (req, res) {
 
 //PUT /posts/:pId/comments/:cId
 //Route for a specific comment updating
-router.put("/:pId/comments/:cId", function (req, res) {
+router.put("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res) {
     req.comment.update(req.body, function (err, result) {
         if (err) return next(err);
         res.json(result);
@@ -134,7 +137,7 @@ router.put("/:pId/comments/:cId", function (req, res) {
 
 //DELETE /posts/:pId/comments/:cId
 //Route for a specific comment deleting
-router.delete("/:pId/comments/:cId", function (req, res) {
+router.delete("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res) {
     req.comment.remove(function (err) {
         if (err) return next(err);
         res.json({
