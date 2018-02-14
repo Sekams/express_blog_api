@@ -32,7 +32,7 @@ node app.js
 ```
 source .env
 ```
-7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: `http://localhost:<PORT>` (replace <PORT> with port number) in any client of choice
+7. After successfully running the application, one can explore the features of The Nexus Blog API by accessing: `http://localhost:<PORT>` (replace `<PORT>` with port number) in any client of choice
 
 ## Features
 * User Account management (Signup and Signin)
