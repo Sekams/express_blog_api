@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
     //Allow requests from all origins
     res.header("Access-Control-Allow-Origin", "*");
     //All Headers that are allowed 
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
     if (req.method === "OPTIONS") {
         //All Methods allowed on the API 
         res.header("Access-Control-Allow-Methods", "POST, PUT, DELETE");
