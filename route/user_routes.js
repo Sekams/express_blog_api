@@ -9,8 +9,9 @@ const AuthTokenHelper = require("../helper/auth_token_helper");
 //POST /user/signup
 //Route for creating users
 router.post("/signup", function (req, res, next) {
-    if (GeneralHelper.validateParams(req, ["firstName", "lastName", "username", "password", "email"])) {
-        User.find({ $or: [{ username: req.body.username.toLowerCase() }, { email: req.body.email.toLowerCase() }] }, function (err, doc) {
+    console.log("<<<<<THE REQUEST BODY IS>>>>>>", req.body);
+    if (GeneralHelper.validateParams(req, ["firstName", "lastName", "username", "password"])) {
+        User.find({ username: req.body.username.toLowerCase() }, function (err, doc) {
             if (err) return next(err);
             if (doc.length > 0) {
                 err = new Error("User already exists");
@@ -19,11 +20,13 @@ router.post("/signup", function (req, res, next) {
             } else {
                 var user = new User(req.body);
                 user.username = req.body.username.toLowerCase();
-                user.email = req.body.email.toLowerCase();
                 user.save(function (err, user) {
                     if (err) return next(err);
                     res.status(201);
                     res.json({
+                        name: user.firstName + " " + user.lastName,
+                        userId: user.id,
+                        admin: user.isAdmin,
                         token: AuthTokenHelper.generateToken(user.id)
                     });
                 });
@@ -48,6 +51,9 @@ router.post("/signin", function (req, res, next) {
                     if (isMatching) {
                         res.status = 200;
                         res.json({
+                            name: user.firstName + " " + user.lastName,
+                            userId: user.id,
+                            admin: user.isAdmin,
                             token: AuthTokenHelper.generateToken(user.id)
                         });
                     } else {

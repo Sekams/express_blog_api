@@ -54,6 +54,7 @@ router.get("/", function (req, res, next) {
 router.post("/", AuthTokenHelper.verifyToken, function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["userId", "title", "body"])) {
         var post = new Post(req.body);
+        post.author = req.user.firstName + " " + req.user.lastName;
         post.save(function (err, post) {
             if (err) return next(err);
             res.status(201);
@@ -108,6 +109,7 @@ router.get("/:pId/comments", function (req, res) {
 router.post("/:pId/comments", AuthTokenHelper.verifyToken, function (req, res, next) {
     if (GeneralHelper.validateParams(req, ["userId", "postId", "body"])) {
         var comment = new Comment(req.body);
+        comment.author = req.user.firstName + " " + req.user.lastName;
         comment.save(function (err, comment) {
             if (err) return next(err);
             res.status(201);

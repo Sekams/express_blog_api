@@ -69,7 +69,7 @@ app.use(function (err, req, res, next) {
 });
 
 //Pick the port from environment variables if it exists or set it to 3000
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 
 //Run the application on specified port
 app.listen(port, function () {
