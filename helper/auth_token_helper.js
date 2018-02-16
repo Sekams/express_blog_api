@@ -3,8 +3,10 @@
 var jwt = require('jsonwebtoken');
 var User = require('../model/user');
 
+const SECRET = process.env.SECRET || "thissecretissosecretyoudontevenknowit";
+
 const generateToken = function (userId) {
-    return jwt.sign({ id: userId }, process.env.SECRET, {
+    return jwt.sign({ id: userId }, SECRET, {
         expiresIn: 86400 // expires in 24 hours
     });
 }
@@ -12,7 +14,7 @@ const generateToken = function (userId) {
 const verifyToken = (req, res, next) => {
     const token = req.headers['x-access-token'];
     if (token) {
-        jwt.verify(token, process.env.SECRET, function (err, decoded) {
+        jwt.verify(token, SECRET, function (err, decoded) {
             if (err) return next(err);
             User.findById(decoded.id, function (err, user) {
                 if (!user) {

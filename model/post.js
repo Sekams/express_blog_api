@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 //Define post schema
 var PostSchema = new Schema({
     userId: { type: String, required: true },
+    author: { type: String, required: true },
     title: { type: String, required: true },
     body: { type: String, required: true },
     imageUrl: { type: String, default: "" },
