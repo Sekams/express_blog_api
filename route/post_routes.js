@@ -69,13 +69,13 @@ router.post("/", AuthTokenHelper.verifyToken, function (req, res, next) {
 
 //GET /posts/:pId
 //Route for specific post reading
-router.get("/:pId", function (req, res) {
+router.get("/:pId", function (req, res, next) {
     res.json(req.post);
 });
 
 //PUT /posts/:pId
 //Route for specific post updating
-router.put("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
+router.put("/:pId", AuthTokenHelper.verifyToken, function (req, res, next) {
     req.post.update(req.body, function (err, result) {
         if (err) return next(err);
         res.json(result);
@@ -84,7 +84,7 @@ router.put("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
 
 //DELETE /posts/:pId
 //Route for specific post deleting
-router.delete("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
+router.delete("/:pId", AuthTokenHelper.verifyToken, function (req, res, next) {
     req.post.remove(function (err) {
         if (err) return next(err);
         res.json({
@@ -95,7 +95,7 @@ router.delete("/:pId", AuthTokenHelper.verifyToken, function (req, res) {
 
 //GET /posts/:pId/comments
 //Route for comments collection
-router.get("/:pId/comments", function (req, res) {
+router.get("/:pId/comments", function (req, res, next) {
     Comment.find({ postId: req.post.id })
         .sort({ createdAt: -1 })
         .exec(function (err, comments) {
@@ -124,7 +124,7 @@ router.post("/:pId/comments", AuthTokenHelper.verifyToken, function (req, res, n
 
 //GET /posts/:pId/comments/:cId
 //Route for a specific comment reading
-router.get("/:pId/comments/:cId", function (req, res) {
+router.get("/:pId/comments/:cId", function (req, res, next) {
     res.json(req.comment);
 });
 
@@ -145,7 +145,7 @@ router.put("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, re
 
 //DELETE /posts/:pId/comments/:cId
 //Route for a specific comment deleting
-router.delete("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res) {
+router.delete("/:pId/comments/:cId", AuthTokenHelper.verifyToken, function (req, res, next) {
     req.comment.remove(function (err) {
         if (err) return next(err);
         res.json({
