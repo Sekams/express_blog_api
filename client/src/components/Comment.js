@@ -22,7 +22,8 @@ class Comment extends Component {
                     title={this.props.author}
                     subtitle={formatDate(createdOn) + edited}
                     avatar={SampleAvatar} />
-                {this.state.logged ?
+                {(this.state.logged === "true" && this.props.userId === localStorage.getItem('userId')) ||
+                    (this.state.logged === "true" && localStorage.getItem('admin') === "true") ?
                     <div className="post-detail-icon-div comment-icon-div">
                         <IconButton><EditIcon /></IconButton>
                         <IconButton><DeleteIcon /></IconButton>

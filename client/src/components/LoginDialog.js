@@ -54,12 +54,13 @@ export default class LoginDialog extends Component {
 
     handleOpen = () => {
         this.setState({ open: true });
-        this.props.showDialog();
     };
 
-    handleClose = () => {
+    handleClose = (event) => {
         this.setState({ open: false });
-        this.props.showDialog();
+        this.props.showDialog(event);
+
+        event.preventDefault()
     };
 
     toggleNewUser = () => {
@@ -107,7 +108,7 @@ export default class LoginDialog extends Component {
                 };
 
                 signUp()
-                    .then(res => localStorage.setItem('user', res))
+                    .then(res => this.login(event, res))
                     .catch(err => console.log(err));
             } else {
                 //Passwords don't match
@@ -134,11 +135,19 @@ export default class LoginDialog extends Component {
             };
 
             signIn()
-                .then(res => localStorage.setItem('user', res))
+                .then(res => this.login(event, res))
                 .catch(err => console.log(err));
         }
 
-        console.log(localStorage.getItem('user'));
+    }
+
+    login(event, response) {
+        localStorage.setItem('name', response.name);
+        localStorage.setItem('userId', response.userId);
+        localStorage.setItem('admin', response.admin);
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('logged', true)
+        this.props.showDialog(event);
     }
 
     render() {
@@ -146,7 +155,7 @@ export default class LoginDialog extends Component {
             <FlatButton
                 label="Cancel"
                 primary={true}
-                onClick={this.handleClose}
+                onClick={event => this.handleClose(event)}
             />,
             <FlatButton
                 label="Submit"

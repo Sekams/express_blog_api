@@ -9,6 +9,8 @@ import ListItem from 'material-ui/List/ListItem';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
+import Text from 'react-format-text';
+import ComfirmDeleteDialog from './ConfirmDeleteDialog'
 
 const style = { margin: 5 };
 
@@ -28,7 +30,7 @@ class Post extends Component {
     state = {
         post: {},
         comments: [],
-        logged: this.props.logged
+        logged: localStorage.getItem('logged')
     };
 
     componentDidMount() {
@@ -58,6 +60,12 @@ class Post extends Component {
 
         return commentsBody;
     };
+
+    showPostEdit = (post) => {
+        localStorage.setItem('currentPostTitle', post.title);
+        localStorage.setItem('currentPostBody', post.body);
+        this.props.showPost(post._id, true);
+    }
 
     render() {
         const createdOn = new Date(this.state.post.createdAt);
@@ -94,9 +102,11 @@ class Post extends Component {
                         </div>
                     </ListItem>
                 </List>
-                {this.state.logged ?
+                {(this.state.logged === "true" && this.state.post.userId === localStorage.getItem('userId')) ||
+                    (this.state.logged === "true" && localStorage.getItem('admin') === "true") ?
                     <div className="post-detail-icon-div">
                         <IconButton
+                            onClick={event => this.showPostEdit(this.state.post)}
                             iconStyle={styles.mediumIcon}
                             style={styles.medium}>
                             <EditIcon />
@@ -108,7 +118,7 @@ class Post extends Component {
                         </IconButton>
                     </div> : null}
                 <h1>{this.state.post.title}</h1>
-                <p>{this.state.post.body}</p>
+                <p><Text>{this.state.post.body}</Text></p>
                 {subHeader}
                 {comments}
             </div>

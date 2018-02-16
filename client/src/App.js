@@ -7,6 +7,7 @@ import AppBar from 'material-ui/AppBar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import CommentIcon from 'material-ui/svg-icons/communication/comment';
+import CheckIcon from 'material-ui/svg-icons/action/done';
 import NavigateLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import SampleAvatar from './images/user/user.svg';
 import Avatar from 'material-ui/Avatar';
@@ -17,91 +18,93 @@ import './App.css';
 
 import CustomGridList from './components/CustomGridList';
 import Post from './components/Post';
+import EditPost from './components/EditPost';
 
 const iconStyle = {
   width: 'auto',
   padding: 0
 }
 
-class Login extends Component {
-  static muiName = 'FlatButton';
-
-  render() {
-    return (
-      <FlatButton {...this.props} label="Login" />
-    );
-  }
-}
-
-const Logged = (props) => (
-  <IconMenu
-    {...props}
-    iconButtonElement={
-      <IconButton style={iconStyle}>
-        <ListItem
-          disabled={true}
-          leftAvatar={
-            <Avatar src={SampleAvatar} />
-          }>
-          {props.name}
-        </ListItem>
-      </IconButton>
-    }
-    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-  >
-    <MenuItem primaryText="Sign Out" onClick={event => props.setLogin(event)} />
-  </IconMenu>
-);
-
-Logged.muiName = 'IconMenu';
-
 class App extends Component {
   state = {
-    logged: false,
+    logged: localStorage.getItem('logged'),
     postId: '',
+    editPost: false,
     openLoginDialog: false
   };
 
-  setLogin = (event) => {
+  logout = (event) => {
+    localStorage.setItem('token', '');
+    localStorage.setItem('logged', false);
+
     this.setState({
-      logged: !this.state.logged,
-      openLoginDialog: false
+      logged: localStorage.getItem('logged'),
     });
-  };
-
-  handleAppBarRightButton = () => {
-    if (!this.state.logged) {
-      this.showLoginDialog();
-    }
-  };
-
-  showLoginDialog = () => {
-    this.setState({ openLoginDialog: !this.state.openLoginDialog });
+    window.location.reload();
   }
 
-  showPost = (postId) => {
-    this.setState({ postId: postId });
+  showLoginDialog = (event) => {
+    this.setState({
+      openLoginDialog: !this.state.openLoginDialog,
+      logged: localStorage.getItem('logged'),
+    });
+  }
+
+  showPost = (postId, editPost) => {
+    this.setState({ postId: postId, editPost: editPost });
   };
 
   render() {
     let mainView, backIcon = null;
+
     if (this.state.postId) {
-      mainView =
-        <div>
-          <Post postId={this.state.postId} logged={this.state.logged} />
-          {this.state.logged ?
-            <FloatingActionButton className="fab">
-              <CommentIcon />
-            </FloatingActionButton> : null}
-        </div>;
+      if (this.state.postId === 'add') {
+        localStorage.setItem('currentPostTitle', '');
+        localStorage.setItem('currentPostBody', '');
+        mainView =
+          <div>
+            <EditPost logged={this.state.logged} postId='' showPost={postId => this.showPost(postId, false)} />
+            <FloatingActionButton
+              className="fab"
+              label="Submit"
+              keyboardFocused={true}
+              type="submit"
+              form="editPostFrom"
+              value="Submit">
+              <CheckIcon />
+            </FloatingActionButton>
+          </div>;
+      } else if (this.state.editPost === true) {
+        mainView =
+          <div>
+            <EditPost logged={this.state.logged} postId={this.state.postId} showPost={postId => this.showPost(postId, false)} />
+            <FloatingActionButton
+              className="fab"
+              label="Submit"
+              keyboardFocused={true}
+              type="submit"
+              form="editPostFrom"
+              value="Submit">
+              <CheckIcon />
+            </FloatingActionButton>
+          </div>;
+      } else {
+        mainView =
+          <div>
+            <Post postId={this.state.postId} logged={this.state.logged} showPost={postId => this.showPost(postId, true)} />
+            {this.state.logged === "true" ?
+              <FloatingActionButton className="fab">
+                <CommentIcon />
+              </FloatingActionButton> : null}
+          </div>;
+      }
       backIcon = <IconButton><NavigateLeft /></IconButton>;
     } else {
       mainView =
         <div>
-          <CustomGridList showPost={postId => this.showPost(postId)} logged={this.state.logged} />
-          {this.state.logged ?
-            <FloatingActionButton className="fab">
+          <CustomGridList showPost={postId => this.showPost(postId, false)} logged={this.state.logged} />
+          {this.state.logged === "true" ?
+            <FloatingActionButton className="fab" onClick={event => this.showPost('add', false)}>
               <ModeEdit />
             </FloatingActionButton> : null}
         </div>;
@@ -114,15 +117,30 @@ class App extends Component {
             onLeftIconButtonClick={event => this.showPost('')}
             showMenuIconButton={this.state.postId !== ''}
             iconElementLeft={backIcon}
-            onRightIconButtonClick={event => this.handleAppBarRightButton()}
-            iconElementRight={this.state.logged ?
-              <Logged name="Simon Peter Ssekamatte" setLogin={event => this.setLogin(event)} /> :
-              <Login />
+            iconElementRight={this.state.logged === "true" ?
+              <IconMenu
+                iconButtonElement={
+                  <IconButton style={iconStyle}>
+                    <ListItem
+                      disabled={true}
+                      leftAvatar={
+                        <Avatar src={SampleAvatar} />
+                      }>
+                      {localStorage.getItem('name')}
+                    </ListItem>
+                  </IconButton>
+                }
+              >
+                <MenuItem primaryText="Sign Out" onClick={event => this.logout(event)} />
+              </IconMenu> :
+              <FlatButton label="Login" onClick={event => this.showLoginDialog(event)} />
             }
           />
         </header>
         {mainView}
-        <LoginDialog open={this.state.openLoginDialog} showDialog={event => { this.showLoginDialog() }} />
+        <LoginDialog
+          open={this.state.openLoginDialog}
+          showDialog={event => { this.showLoginDialog(event) }} />
       </div>
     );
   }
