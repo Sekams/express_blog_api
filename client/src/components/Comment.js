@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import SampleAvatar from '../images/user/user.svg';
 import { formatDate } from '../utils/Helper';
@@ -30,6 +31,12 @@ class Comment extends Component {
         body: this.props.body ? this.props.body : '',
         submitted: false
     };
+
+    componentDidUpdate() {
+        if (this.state.commentAction === 'add') {
+            ReactDOM.findDOMNode(this).scrollIntoView();
+        }
+    }
 
     handleBody(body) {
         this.setState({ body: body });
@@ -127,7 +134,7 @@ class Comment extends Component {
             const now = new Date();
             const title = this.state.commentAction !== '' && this.state.commentAction === 'add' ? "Add Comment" : "Edit Comment";
             mainView =
-                <div>
+                <div ref="addComment">
                     <CardHeader
                         className="card"
                         title={this.props.author}
