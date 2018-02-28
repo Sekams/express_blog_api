@@ -38,6 +38,7 @@ source .env
 * Blog Post creation, retrieval, updating and deletion
 * Blog Post Comment creation, retrieval, updating and deletion
 
+
 ##Screenshots
 
 <img width="1440" alt="screen shot 2018-02-28 at 7 46 59 pm" src="https://user-images.githubusercontent.com/22541550/36800416-8cfeefb8-1cc0-11e8-9fe6-0751fbc3decd.png">
