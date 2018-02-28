@@ -18,9 +18,7 @@
     "material-ui": "^0.20.0",
     "mongoose": "^4.4.20",
     "morgan": "^1.7.0",
-    "yarn": "^1.5.1"
-  },
-  "devDependencies": {
+    "yarn": "^1.5.1",
     "concurrently": "^3.5.1"
   }
 }
