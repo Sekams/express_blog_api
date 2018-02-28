@@ -24,8 +24,7 @@ npm install
 5. Set up the environment variables in a file named `.env` at the application root directory structured as shown below:
 ```
 export SECRET=<secret key e.g. tvngivginvigbgbtgbvigbirgbi>
-export PORT=<port number e.g. 3000>
-node app.js
+yarn dev
 ```
 
 6. After all the requirements are installed on the local application instance, run the application by running the following code in the terminal at the application root directory:

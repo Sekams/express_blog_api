@@ -45,8 +45,9 @@ class CustomGridList extends Component {
     }
 
     render() {
-        return (
-            <div style={styles.root}>
+        let mainView = null;
+        if (this.state.response.length > 0) {
+            mainView =
                 <GridList
                     cellHeight='auto'
                     style={styles.gridList} >
@@ -60,7 +61,14 @@ class CustomGridList extends Component {
                             </Paper>
                         </GridTile>
                     ))}
-                </GridList>
+                </GridList>;
+        } else {
+            mainView =
+                <h1>There is no content yet</h1>
+        }
+        return (
+            <div style={styles.root}>
+                {mainView}
             </div>
         );
     }
