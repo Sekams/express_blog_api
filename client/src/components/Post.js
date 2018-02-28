@@ -10,7 +10,6 @@ import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
 import Text from 'react-format-text';
-import ComfirmDeleteDialog from './ConfirmDeleteDialog'
 
 const style = { margin: 5 };
 
@@ -30,7 +29,9 @@ class Post extends Component {
     state = {
         post: {},
         comments: [],
-        logged: localStorage.getItem('logged')
+        postId: this.props.postId,
+        logged: localStorage.getItem('logged'),
+        commentAction: this.props.commentAction,
     };
 
     componentDidMount() {
@@ -38,6 +39,10 @@ class Post extends Component {
             .then(res => this.setState({ post: res }))
             .catch(err => console.log(err));
 
+        this.loadComments();
+    }
+
+    loadComments = () => {
         this.getComments()
             .then(res => this.setState({ comments: res }))
             .catch(err => console.log(err));
@@ -61,13 +66,45 @@ class Post extends Component {
         return commentsBody;
     };
 
+    deletePost = async () => {
+        const deleteResponse = await fetch(apiBaseUrl + '/api/v1/posts/' + localStorage.getItem('deletingPost'), {
+            method: 'DELETE',
+            headers: new Headers({
+                'x-access-token': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        });
+        const deleteBody = await deleteResponse.json();
+
+        if (deleteResponse.status > 299) throw Error(deleteBody.error.message);
+
+        return deleteBody;
+    };
+
     showPostEdit = (post) => {
         localStorage.setItem('currentPostTitle', post.title);
         localStorage.setItem('currentPostBody', post.body);
-        this.props.showPost(post._id, true);
+        this.props.editPost(post._id, 'edit');
+    }
+
+    handlePostDelete = (event) => {
+        localStorage.setItem('deletingPost', this.props.postId);
+        this.props.showSnackbar('Deleting Post');
+        setTimeout(
+            () => { this.deletePostResponseHandler(event); },
+            4000);
+    }
+
+    deletePostResponseHandler = (event) => {
+        if (localStorage.getItem('deletingPost') !== '') {
+            this.deletePost()
+                .then(res => this.props.showPost('', ''))
+                .catch(err => console.log(err));
+        }
     }
 
     render() {
+        let editComment = null;
         const createdOn = new Date(this.state.post.createdAt);
         const updatedOn = new Date(this.state.post.updatedAt);
         const edited = createdOn < updatedOn ? ' (Edited)' : '';
@@ -82,10 +119,31 @@ class Post extends Component {
                         createdAt={comment.createdAt}
                         updatedAt={comment.updatedAt}
                         body={comment.body}
+                        postId={this.props.postId}
+                        comment={comment}
+                        commentId={comment._id}
+                        handleComment={action => this.props.handleComment(action)}
+                        showPost={postId => this.props.showPost(postId, 'done')}
+                        loadComments={event => this.loadComments()}
+                        showSnackbar={message => this.props.showSnackbar(message)}
                         logged={this.state.logged} />
                 );
             });
         }
+        if (this.state.commentAction) {
+            editComment =
+                <Comment
+                    key="edit_comment"
+                    author={localStorage.getItem('name')}
+                    commentAction={this.state.commentAction}
+                    postId={this.props.postId}
+                    logged={this.state.logged}
+                    handleComment={action => this.props.handleComment(action)}
+                    showPost={postId => this.props.showPost(postId, 'done')}
+                    loadComments={event => this.loadComments()}
+                    showSnackbar={message => this.props.showSnackbar(message)} />;
+        }
+
         return (
             <div className="post-detail" >
                 <List>
@@ -112,6 +170,7 @@ class Post extends Component {
                             <EditIcon />
                         </IconButton>
                         <IconButton
+                            onClick={event => this.handlePostDelete(event)}
                             iconStyle={styles.mediumIcon}
                             style={styles.medium}>
                             <DeleteIcon />
@@ -120,6 +179,7 @@ class Post extends Component {
                 <h1>{this.state.post.title}</h1>
                 <p><Text>{this.state.post.body}</Text></p>
                 {subHeader}
+                {editComment}
                 {comments}
             </div>
         );

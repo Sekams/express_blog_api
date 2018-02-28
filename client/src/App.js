@@ -13,12 +13,11 @@ import SampleAvatar from './images/user/user.svg';
 import Avatar from 'material-ui/Avatar';
 import ListItem from 'material-ui/List/ListItem';
 import LoginDialog from './components/LoginDialog';
-
-import './App.css';
-
 import CustomGridList from './components/CustomGridList';
 import Post from './components/Post';
 import EditPost from './components/EditPost';
+import './App.css';
+import CustomSnackbar from './components/Snackbar';
 
 const iconStyle = {
   width: 'auto',
@@ -29,8 +28,11 @@ class App extends Component {
   state = {
     logged: localStorage.getItem('logged'),
     postId: '',
-    editPost: false,
-    openLoginDialog: false
+    postAction: '',
+    commentAction: '',
+    openLoginDialog: false,
+    showSnackbar: false,
+    snackbarMessage: ''
   };
 
   logout = (event) => {
@@ -50,20 +52,47 @@ class App extends Component {
     });
   }
 
-  showPost = (postId, editPost) => {
-    this.setState({ postId: postId, editPost: editPost });
+  showPost = (postId, postAction) => {
+    this.setState({ postId: postId, postAction: postAction });
   };
 
-  render() {
-    let mainView, backIcon = null;
+  handleComment = (action) => {
+    this.setState({ commentAction: action });
+  }
 
-    if (this.state.postId) {
-      if (this.state.postId === 'add') {
+  showSnackbar = (snackbarMessage) => {
+    this.setState({
+      showSnackbar: true,
+      snackbarMessage: snackbarMessage
+    });
+    setTimeout(
+      () => {
+        this.setState({
+          showSnackbar: false,
+          snackbarMessage: ''
+        });
+      },
+      4500);
+  }
+
+  render() {
+    let mainView, backIcon, snackBar = null;
+
+    if (this.state.showSnackbar) {
+      snackBar =
+        <CustomSnackbar
+          open={this.state.showSnackbar}
+          message={this.state.snackbarMessage}
+        />;
+    }
+
+    if (this.state.postAction || this.state.commentAction || this.state.postId) {
+      if (this.state.postAction === 'add') {
         localStorage.setItem('currentPostTitle', '');
         localStorage.setItem('currentPostBody', '');
         mainView =
           <div>
-            <EditPost logged={this.state.logged} postId='' showPost={postId => this.showPost(postId, false)} />
+            <EditPost logged={this.state.logged} postId='' showPost={postId => this.showPost(postId, '')} />
             <FloatingActionButton
               className="fab"
               label="Submit"
@@ -74,10 +103,10 @@ class App extends Component {
               <CheckIcon />
             </FloatingActionButton>
           </div>;
-      } else if (this.state.editPost === true) {
+      } else if (this.state.postAction === "edit") {
         mainView =
           <div>
-            <EditPost logged={this.state.logged} postId={this.state.postId} showPost={postId => this.showPost(postId, false)} />
+            <EditPost logged={this.state.logged} postId={this.state.postId} showPost={postId => this.showPost(postId, '')} />
             <FloatingActionButton
               className="fab"
               label="Submit"
@@ -88,12 +117,27 @@ class App extends Component {
               <CheckIcon />
             </FloatingActionButton>
           </div>;
+      } else if (this.state.commentAction === "add") {
+        mainView =
+          <Post
+            showSnackbar={snackbarMessage => this.showSnackbar(snackbarMessage)}
+            commentAction={this.state.commentAction}
+            logged={this.state.logged}
+            postId={this.state.postId}
+            showPost={postId => this.showPost(postId, 'done')}
+            handleComment={action => this.handleComment(action)} />;
       } else {
         mainView =
           <div>
-            <Post postId={this.state.postId} logged={this.state.logged} showPost={postId => this.showPost(postId, true)} />
+            <Post
+              showSnackbar={snackbarMessage => this.showSnackbar(snackbarMessage)}
+              postId={this.state.postId}
+              logged={this.state.logged}
+              showPost={postId => this.showPost(postId, '')}
+              editPost={postId => this.showPost(postId, 'edit')}
+              handleComment={action => this.handleComment(action)} />
             {this.state.logged === "true" ?
-              <FloatingActionButton className="fab">
+              <FloatingActionButton className="fab" onClick={event => this.handleComment('add')}>
                 <CommentIcon />
               </FloatingActionButton> : null}
           </div>;
@@ -102,9 +146,9 @@ class App extends Component {
     } else {
       mainView =
         <div>
-          <CustomGridList showPost={postId => this.showPost(postId, false)} logged={this.state.logged} />
+          <CustomGridList showPost={postId => this.showPost(postId, '')} logged={this.state.logged} />
           {this.state.logged === "true" ?
-            <FloatingActionButton className="fab" onClick={event => this.showPost('add', false)}>
+            <FloatingActionButton className="fab" onClick={event => this.showPost('', 'add')}>
               <ModeEdit />
             </FloatingActionButton> : null}
         </div>;
@@ -114,8 +158,8 @@ class App extends Component {
         <header>
           <AppBar
             title="The Nexus Blog"
-            onLeftIconButtonClick={event => this.showPost('')}
-            showMenuIconButton={this.state.postId !== ''}
+            onLeftIconButtonClick={event => this.state.postAction === 'edit' ? this.showPost(this.state.postId, '') : this.showPost('', '')}
+            showMenuIconButton={this.state.postId !== '' || this.state.postAction !== ''}
             iconElementLeft={backIcon}
             iconElementRight={this.state.logged === "true" ?
               <IconMenu
@@ -141,6 +185,7 @@ class App extends Component {
         <LoginDialog
           open={this.state.openLoginDialog}
           showDialog={event => { this.showLoginDialog(event) }} />
+        {snackBar}
       </div>
     );
   }

@@ -41,7 +41,7 @@ class CustomGridList extends Component {
 
     onPostSelected(postId) {
         this.setState({ postId });
-        this.props.showPost(postId, false);
+        this.props.showPost(postId, '');
     }
 
     render() {
