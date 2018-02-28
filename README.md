@@ -38,6 +38,18 @@ source .env
 * Blog Post creation, retrieval, updating and deletion
 * Blog Post Comment creation, retrieval, updating and deletion
 
+##Screenshots
+
+<img width="1440" alt="screen shot 2018-02-28 at 7 46 59 pm" src="https://user-images.githubusercontent.com/22541550/36800416-8cfeefb8-1cc0-11e8-9fe6-0751fbc3decd.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 46 55 pm" src="https://user-images.githubusercontent.com/22541550/36800457-a901863a-1cc0-11e8-8731-0b45d78eddf4.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 47 13 pm" src="https://user-images.githubusercontent.com/22541550/36800478-b67f1570-1cc0-11e8-914a-acfd2486857e.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 46 31 pm" src="https://user-images.githubusercontent.com/22541550/36800494-bca09b2c-1cc0-11e8-81e1-62c3abc1e4f1.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 46 10 pm" src="https://user-images.githubusercontent.com/22541550/36800515-c2689f64-1cc0-11e8-9144-9054273382b8.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 46 20 pm" src="https://user-images.githubusercontent.com/22541550/36800579-e7008cce-1cc0-11e8-95e1-7c301e4430ab.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 45 55 pm" src="https://user-images.githubusercontent.com/22541550/36800589-eb98754e-1cc0-11e8-9a52-1771d87748bf.png">
+<img width="1440" alt="screen shot 2018-02-28 at 7 45 43 pm" src="https://user-images.githubusercontent.com/22541550/36800599-f05f131c-1cc0-11e8-89d7-99d4536e666f.png">
+
+
 ## EndPoints
 
 | Type | API EndPoint | Requires Token | Description |
