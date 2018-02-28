@@ -45,8 +45,9 @@
 }
 
 .post-detail {
-  padding-left: 4em;
-  padding-right: 4em;
+  padding-left: 10em;
+  padding-right: 10em;
+  padding-bottom: 5em;
 }
 
 .card-text {
