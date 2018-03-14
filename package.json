@@ -5,7 +5,6 @@
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"mongod\" \"yarn server\" \"yarn client\"",
-    "prod": "concurrently --kill-others-on-fail \"node server.js\" \"cd client && npm start\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
