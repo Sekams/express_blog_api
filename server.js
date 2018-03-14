@@ -18,7 +18,7 @@ app.use(jsonParser());
 var mongoose = require("mongoose");
 
 //Connect to the database
-mongoose.connect("mongodb://localhost:27017/express_blog_api_db");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/express_blog_api_db");
 
 //Assign database connection to a variable
 var db = mongoose.connection;
